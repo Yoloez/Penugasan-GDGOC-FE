@@ -1,4 +1,6 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import TopBar from "./TopBar";
 import Navigation from "./Navigation";
 
@@ -7,10 +9,21 @@ interface HeaderProps {
 }
 
 const Header: React.FC<HeaderProps> = ({ onSearch }) => {
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <header className="text-white min-h-[136px] w-full flex flex-col">
-      <TopBar />
-      <Navigation onSearch={onSearch} />
+    <header className="text-white w-full">
+      <TopBar isScrolled={isScrolled} />
+      <Navigation onSearch={onSearch} isScrolled={isScrolled} />
     </header>
   );
 };

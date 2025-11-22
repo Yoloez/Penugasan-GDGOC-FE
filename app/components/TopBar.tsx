@@ -3,9 +3,13 @@ import { FaTwitter, FaFacebook, FaYoutube, FaInstagram, FaMailBulk } from "react
 import { FiPhone } from "react-icons/fi";
 import { TfiEmail } from "react-icons/tfi";
 
-const TopBar: React.FC = () => {
+interface TopBarProps {
+  isScrolled?: boolean;
+}
+
+const TopBar: React.FC<TopBarProps> = ({ isScrolled }) => {
   return (
-    <div className="flex-row justify-items-center px-6 py-2 text-sm border-b border-emerald-600 bg-[#23856D] w-full">
+    <div className={`flex-row justify-items-center px-6 py-2 text-sm border-b border-emerald-600 bg-[#23856D] w-full transition-all duration-300 ${isScrolled ? "h-0 overflow-hidden opacity-0" : "h-auto opacity-100"}`}>
       <div className="w-[1020px] h-[46px] flex justify-between items-center">
         <div className="flex gap-6">
           <div className="flex items-center gap-2">

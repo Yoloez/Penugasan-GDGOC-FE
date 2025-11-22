@@ -6,9 +6,10 @@ import { IoChevronDownOutline } from "react-icons/io5";
 
 interface NavigationProps {
   onSearch?: (keyword: string) => void;
+  isScrolled?: boolean;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ onSearch }) => {
+const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -30,7 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch }) => {
   };
 
   return (
-    <div className="flex justify-center bg-white sticky py-2 top-0 z-50 shadow-sm">
+    <div className={`flex justify-center bg-white py-2 z-50 shadow-sm transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0" : "sticky top-0"}`}>
       <div className="flex text-gray-700 justify-between items-center py-4 w-[1042px]">
         <div className="text-2xl font-bold">Bookstar</div>
         <nav className="flex gap-6 text-abu font-semibold">
