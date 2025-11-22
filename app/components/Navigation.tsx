@@ -33,7 +33,9 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
   return (
     <div className={`flex justify-center bg-white py-2 z-50 shadow-sm transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0" : "sticky top-0"}`}>
       <div className="flex text-gray-700 justify-between items-center py-4 w-[1042px]">
+        <a href="#">
         <div className="text-2xl font-bold">Bookstar</div>
+        </a>
         <nav className="flex gap-6 text-abu font-semibold">
           <a href="#" className="hover:text-emerald-600">
             Home

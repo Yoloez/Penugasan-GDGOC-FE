@@ -29,7 +29,7 @@ const ReadingList: React.FC<ReadingListProps> = ({ sort = "popular", page = 1, y
         if (genre) params.append("genre", genre);
         if (keyword) params.append("keyword", keyword);
 
-        const response = await fetch(`http://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?${params.toString()}`);
+        const response = await fetch(`https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?${params.toString()}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch books");
