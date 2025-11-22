@@ -66,3 +66,28 @@ export interface ApiResponse {
     hasPrevPage: boolean;
   };
 }
+
+export interface BookDetailResponse {
+  book: Book;
+}
+
+// Helper function to convert Book to Product
+export const convertBookToProduct = (book: Book): Product => {
+  const priceString = book.details.price.replace(/[^0-9]/g, "");
+  const priceIDR = parseInt(priceString) || 0;
+  const priceUSD = priceIDR / 15000; // Convert IDR to USD (approximate rate)
+
+  return {
+    id: book._id,
+    title: book.title,
+    price: priceUSD,
+    availability: "In Stock",
+    description: book.summary,
+    pages: parseInt(book.details.total_pages) || 0,
+    format: book.details.format,
+    isbn: book.details.isbn,
+    published: book.details.published_date,
+    categories: [book.category.name, ...book.tags.map((tag) => tag.name)],
+    images: [book.cover_image],
+  };
+};

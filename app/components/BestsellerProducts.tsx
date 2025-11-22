@@ -10,12 +10,20 @@ interface BestsellerProductsProps {
   year?: string;
   genre?: string;
   keyword?: string;
+  onBookSelect?: (book: Book) => void;
 }
 
-const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest", page = 1, year = "", genre = "", keyword = "" }) => {
+const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest", page: initialPage = 2, year = "", genre = "", keyword = "", onBookSelect }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [pagination, setPagination] = useState({
+    totalPages: 1,
+    totalItems: 0,
+    hasNextPage: false,
+    hasPrevPage: false,
+  });
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -23,12 +31,12 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
         setLoading(true);
         const params = new URLSearchParams();
         if (sort) params.append("sort", sort);
-        if (page) params.append("page", page.toString());
+        params.append("page", currentPage.toString());
         if (year) params.append("year", year);
         if (genre) params.append("genre", genre);
         if (keyword) params.append("keyword", keyword);
 
-        const response = await fetch(`https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?${params.toString()}`);
+        const response = await fetch(`http://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?${params.toString()}`);
 
         if (!response.ok) {
           throw new Error("Failed to fetch books");
@@ -36,6 +44,12 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
 
         const data: ApiResponse = await response.json();
         setBooks(data.books);
+        setPagination({
+          totalPages: data.pagination.totalPages,
+          totalItems: data.pagination.totalItems,
+          hasNextPage: data.pagination.hasNextPage,
+          hasPrevPage: data.pagination.hasPrevPage,
+        });
         setError(null);
       } catch (err) {
         setError(err instanceof Error ? err.message : "An error occurred");
@@ -46,7 +60,14 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
     };
 
     fetchBooks();
-  }, [sort, page, year, genre, keyword]);
+  }, [sort, currentPage, year, genre, keyword]);
+
+  const handleBookClick = (book: Book) => {
+    console.log("Book clicked:", book);
+    if (onBookSelect) {
+      onBookSelect(book);
+    }
+  };
 
   if (loading) {
     return (
@@ -71,12 +92,58 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
   return (
     <section className="py-12 flex justify-center">
       <div className="w-[1050px]">
-        <h3 className="text-2xl font-bold text-left text-gelap mb-8">BESTSELLER PRODUCTS</h3>
+        <h3 className="text-2xl font-bold text-left text-gelap mb-8">Books For You</h3>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-8 border-t-2 border-light-gray">
           {books.slice(0, 8).map((book) => (
-            <ProductCard key={book._id} book={book} />
+            <ProductCard key={book._id} book={book} onBookClick={handleBookClick} />
           ))}
         </div>
+
+        {/* Pagination */}
+        {pagination.totalPages > 1 && (
+          <div className="flex justify-center items-center gap-4 mt-8">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
+              disabled={!pagination.hasPrevPage}
+              className="px-4 py-2 bg-biru text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              Previous
+            </button>
+
+            <div className="flex items-center gap-2">
+              {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
+                let pageNumber;
+                if (pagination.totalPages <= 5) {
+                  pageNumber = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNumber = i + 1;
+                } else if (currentPage >= pagination.totalPages - 2) {
+                  pageNumber = pagination.totalPages - 4 + i;
+                } else {
+                  pageNumber = currentPage - 2 + i;
+                }
+
+                return (
+                  <button
+                    key={pageNumber}
+                    onClick={() => setCurrentPage(pageNumber)}
+                    className={`px-4 py-2 cursor-pointer rounded-lg transition-colors ${currentPage === pageNumber ? "bg-biru text-white font-bold" : "bg-gray-200 text-gelap hover:bg-gray-300"}`}
+                  >
+                    {pageNumber}
+                  </button>
+                );
+              })}
+            </div>
+
+            <button
+              onClick={() => setCurrentPage((prev) => Math.min(pagination.totalPages, prev + 1))}
+              disabled={!pagination.hasNextPage}
+              className="px-4 py-2 bg-biru cursor-pointer text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </section>
   );

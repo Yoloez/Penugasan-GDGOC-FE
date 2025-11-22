@@ -20,15 +20,23 @@ const TopBar: React.FC = () => {
           </div>
         </div>
         <div className="flex gap-3">
-          <span className="font-bold text-sm">Follow Us and get a chance to win 80% off</span>
+          <span className="font-semibold text-sm">Follow Us and get a chance to win 80% off</span>
         </div>
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-3">
-            <span className="font-bold">Follow Us :</span>
-            <FaInstagram size={16} />
-            <FaYoutube size={16} />
-            <FaFacebook size={16} />
-            <FaTwitter size={16} />
+            <span className="font-normal">Follow Us :</span>
+            <a href="">
+              <FaInstagram size={16} />
+            </a>
+            <a href="">
+              <FaYoutube size={16} />
+            </a>
+            <a href="">
+              <FaFacebook size={16} />
+            </a>
+            <a href="">
+              <FaTwitter size={16} />
+            </a>
           </div>
         </div>
       </div>

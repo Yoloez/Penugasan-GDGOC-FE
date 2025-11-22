@@ -5,13 +5,15 @@ import Header from "./components/Header";
 import Breadcrumb from "./components/Breadcrumb";
 import ProductGallery from "./components/ProductGallery";
 import ProductInfo from "./components/ProductInfo";
+import ReadingList from "./components/ReadingList";
 import BestsellerProducts from "./components/BestsellerProducts";
-import { Product } from "./components/types";
+import { Product, Book, convertBookToProduct } from "./components/types";
 
 const ProductDetailPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [searchKeyword, setSearchKeyword] = useState("");
 
-  const product: Product = {
+  const initialProduct: Product = {
     id: "1",
     title: "Beyond the Stars",
     price: 1139.33,
@@ -25,6 +27,8 @@ const ProductDetailPage: React.FC = () => {
     images: ["/images/hndoko.jpg"],
   };
 
+  const [product, setProduct] = useState<Product>(initialProduct);
+
   const nextImage = () => {
     setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
   };
@@ -33,15 +37,34 @@ const ProductDetailPage: React.FC = () => {
     setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
   };
 
+  const handleBookSelect = (book: Book) => {
+    console.log("handleBookSelect called with book:", book);
+    const convertedProduct = convertBookToProduct(book);
+    console.log("Converted product:", convertedProduct);
+    setProduct(convertedProduct);
+    setCurrentImageIndex(0);
+    // Scroll to product detail section
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const handleSearch = (keyword: string) => {
+    console.log("Search keyword:", keyword);
+    setSearchKeyword(keyword);
+    // Scroll to bestseller products section
+    const bestsellerSection = document.getElementById("bestseller-section");
+    if (bestsellerSection) {
+      bestsellerSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-light">
-      <Header />
+      <Header onSearch={handleSearch} />
 
       <section className="py-6 flex justify-center">
         <div className="w-[1050px]">
           <Breadcrumb />
-
-          <div className="container mx-auto px-4 py-12">
+          <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <ProductGallery images={product.images} currentImageIndex={currentImageIndex} onNextImage={nextImage} onPrevImage={prevImage} productTitle={product.title} />
               <ProductInfo product={product} />
@@ -50,8 +73,13 @@ const ProductDetailPage: React.FC = () => {
         </div>
       </section>
 
+      {/* Reading List */}
+      <ReadingList onBookClick={handleBookSelect} />
+
       {/* Bestseller Products */}
-      <BestsellerProducts />
+      <div id="bestseller-section">
+        <BestsellerProducts onBookSelect={handleBookSelect} keyword={searchKeyword} />
+      </div>
     </div>
   );
 };
