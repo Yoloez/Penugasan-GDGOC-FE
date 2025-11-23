@@ -151,23 +151,23 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
       {/* Search Bar Overlay */}
       {isSearchOpen && (
         <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg">
-          <div className="flex justify-center py-4">
-            <div className="w-[1042px] flex items-center gap-4">
+          <div className="flex justify-center py-4 px-4 md:px-0">
+            <div className="w-full max-w-[1042px] flex items-center gap-2 md:gap-4">
               <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2">
                 <input
                   id="search-input"
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search books by title, author, or keyword..."
-                  className="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-gelap focus:outline-none focus:border-biru"
+                  placeholder="Search books..."
+                  className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg text-gelap focus:outline-none focus:border-biru"
                 />
-                <button type="submit" className="px-6 py-2 bg-biru text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                <button type="submit" className="px-4 md:px-6 py-2 text-sm md:text-base bg-biru text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold whitespace-nowrap">
                   Search
                 </button>
               </form>
-              <button onClick={() => setIsSearchOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors">
-                <X size={24} className="text-gray-600" />
+              <button onClick={() => setIsSearchOpen(false)} className="p-2 hover:bg-gray-100 rounded-full transition-colors shrink-0">
+                <X size={20} className="text-gray-600 md:w-6 md:h-6" />
               </button>
             </div>
           </div>
