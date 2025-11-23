@@ -9,7 +9,7 @@ interface ProductInfoProps {
 
 const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
   const [isExpanded, setIsExpanded] = useState(false);
-  const maxHeight = 150; // max height in pixels before showing "see more"
+  const maxHeight = 150;
 
   return (
     <div className="max-w-[510px]" id="product-info">

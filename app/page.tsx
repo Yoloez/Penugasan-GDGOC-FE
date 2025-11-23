@@ -36,8 +36,7 @@ const ProductDetailPage: React.FC = () => {
     const fetchInitialProduct = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?sort=popular&page=1");
-
+        const response = await fetch("https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?sort=popular&page=2");
         if (!response.ok) {
           throw new Error("Failed to fetch book");
         }
@@ -45,14 +44,14 @@ const ProductDetailPage: React.FC = () => {
         const data: ApiResponse = await response.json();
         if (data.books && data.books.length > 0) {
           setAllBooks(data.books);
-          const firstBook = data.books[6];
+          const firstBook = data.books[0];
           const convertedProduct = convertBookToProduct(firstBook);
           setProduct(convertedProduct);
           setCurrentBookIndex(0);
         }
       } catch (error) {
         console.error("Error fetching initial product:", error);
-        // Keep using initialProduct as fallback
+      
       } finally {
         setLoading(false);
       }
