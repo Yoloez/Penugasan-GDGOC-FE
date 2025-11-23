@@ -77,10 +77,10 @@ const ReadingList: React.FC<ReadingListProps> = ({ sort = "popular", page = 1, y
   }
 
   return (
-    <section className="py-12 flex justify-center ">
-      <div className="w-[1050px]">
-        <h2 className="text-2xl font-bold text-gelap mb-8">Your Reading List</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 border-t-2 border-light-gray pt-8">
+    <section className="py-6 md:py-12 flex justify-center">
+      <div className="w-full max-w-[1050px] md:px-0">
+        <h2 className="text-xl md:text-2xl font-bold text-gelap mb-4 md:mb-8 px-4 md:px-0">Your Reading List</h2>
+        <div className="md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:border-t md:border-gray-200 md:pt-8 overflow-x-auto flex md:flex-none gap-4 px-4 md:px-0 pb-4 md:pb-0 scrollbar-hide">
           {books.slice(0, 4).map((book) => {
             const priceString = book.details.price.replace(/[^0-9]/g, "");
             const priceIDR = parseInt(priceString);
@@ -99,16 +99,16 @@ const ReadingList: React.FC<ReadingListProps> = ({ sort = "popular", page = 1, y
             }).format(originalPriceUSD);
 
             return (
-              <div key={book._id} className="group cursor-pointer bg-white pb-8" onClick={() => handleBookClick(book)}>
-                <div className="relative aspect-3/4 overflow-hidden bg-gray-100 mb-4">
-                  <Image src={book.cover_image} alt={book.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw" />
+              <div key={book._id} className="group cursor-pointer bg-white shrink-0 w-[238px] md:w-auto pb-8" onClick={() => handleBookClick(book)}>
+                <div className="relative aspect-3/4 overflow-hidden bg-gray-100 mb-3 md:mb-4">
+                  <Image src={book.cover_image} alt={book.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />
                 </div>
-                <div className="text-left px-6">
-                  <h3 className="font-bold text-gelap mb-2 line-clamp-1">{book.title}</h3>
-                  <p className="text-sm text-abu mb-3">{book.category.name}</p>
-                  <div className="flex pl-2 items-center justify-start gap-2">
-                    <span className="text-gray-400 line-through text-sm">{formattedOriginalPrice}</span>
-                    <span className="text-greenMantap font-bold">{formattedPrice}</span>
+                <div className="text-left px-3">
+                  <h3 className="font-bold text-gelap text-sm md:text-base mb-1 md:mb-2 line-clamp-1">{book.title}</h3>
+                  <p className="text-xs md:text-sm text-abu mb-2 md:mb-3">{book.category.name}</p>
+                  <div className="flex items-center justify-start gap-1 md:gap-2 px-1">
+                    <span className="text-gray-400 line-through text-xs md:text-sm">{formattedOriginalPrice}</span>
+                    <span className="text-greenMantap font-bold text-sm md:text-base">{formattedPrice}</span>
                   </div>
                 </div>
               </div>

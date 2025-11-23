@@ -12,7 +12,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
   const maxHeight = 150; // max height in pixels before showing "see more"
 
   return (
-    <div className="max-w-[510px]">
+    <div className="max-w-[510px]" id="product-info">
       <div className="flex flex-wrap gap-2 mb-4 max-w-[510px]">
         {product.categories.slice(0, 4).map((cat, index) => (
           <span key={`${cat}-${index}`} className="px-3 py-1 bg-netral font-medium text-black text-sm rounded-[40px] whitespace-nowrap">

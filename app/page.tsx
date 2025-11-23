@@ -58,10 +58,10 @@ const ProductDetailPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-light">
+    <div id="home" className="min-h-screen bg-light">
       <Header onSearch={handleSearch} />
 
-      <section className="py-6 flex justify-center">
+      <section id="product-detail" className="py-6 flex justify-center">
         <div className="w-[1050px]">
           <Breadcrumb />
           <div className="container mx-auto px-4 py-8">
@@ -74,7 +74,9 @@ const ProductDetailPage: React.FC = () => {
       </section>
 
       {/* Reading List */}
-      <ReadingList onBookClick={handleBookSelect} />
+      <div id="reading-list">
+        <ReadingList onBookClick={handleBookSelect} />
+      </div>
 
       {/* Bestseller Products */}
       <div id="bestseller-section">

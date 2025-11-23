@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { ShoppingCart, Heart, Search, UserRound, X } from "lucide-react";
+import { ShoppingCart, Heart, Search, UserRound, X, Menu } from "lucide-react";
+import { BiMenuAltRight } from "react-icons/bi";
 import { IoChevronDownOutline } from "react-icons/io5";
 
 interface NavigationProps {
@@ -11,6 +12,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -18,11 +20,13 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
     if (searchQuery.trim() && onSearch) {
       onSearch(searchQuery.trim());
       setIsSearchOpen(false);
+      setIsMenuOpen(false);
     }
   };
 
   const handleSearchToggle = () => {
     setIsSearchOpen(!isSearchOpen);
+    setIsMenuOpen(false);
     if (!isSearchOpen) {
       setTimeout(() => {
         document.getElementById("search-input")?.focus();
@@ -30,36 +34,56 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
     }
   };
 
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+    setIsSearchOpen(false);
+  };
+
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (href.startsWith("#")) {
+      e.preventDefault();
+      const element = document.querySelector(href);
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth" });
+        setIsMenuOpen(false);
+      }
+    }
+  };
+
   return (
     <div className={`flex justify-center bg-white py-2 z-50 shadow-sm transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0" : "sticky top-0"}`}>
-      <div className="flex text-gray-700 justify-between items-center py-4 w-[1042px]">
+      <div className="flex text-gray-700 justify-between items-center py-4 w-full max-w-[1042px] px-4 md:px-0">
         <a href="#">
-        <div className="text-2xl font-bold">Bookstar</div>
+          <div className="text-2xl font-bold">Bookstar</div>
         </a>
-        <nav className="flex gap-6 text-abu font-semibold">
-          <a href="#" className="hover:text-emerald-600">
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex gap-6 text-abu font-semibold">
+          <a href="#home" onClick={(e) => handleNavClick(e, "#home")} className="hover:text-emerald-600">
             Home
           </a>
-          <a href="#" className="hover:text-emerald-600 text-gelap">
+          <a href="#product-detail" onClick={(e) => handleNavClick(e, "#product-detail")} className="hover:text-emerald-600 text-gelap">
             Shop
             <span>
               <IoChevronDownOutline size={12} className="inline-block ml-2" />
             </span>
           </a>
-          <a href="#" className="hover:text-emerald-600">
+          <a href="#reading-list" onClick={(e) => handleNavClick(e, "#reading-list")} className="hover:text-emerald-600">
             About
           </a>
-          <a href="#" className="hover:text-emerald-600">
+          <a href="#bestseller-section" onClick={(e) => handleNavClick(e, "#bestseller-section")} className="hover:text-emerald-600">
             Blog
           </a>
-          <a href="#" className="hover:text-emerald-600">
+          <a href="#product-detail" onClick={(e) => handleNavClick(e, "#product-detail")} className="hover:text-emerald-600">
             Contact
           </a>
-          <a href="#" className="hover:text-emerald-600">
+          <a href="#bestseller-section" onClick={(e) => handleNavClick(e, "#bestseller-section")} className="hover:text-emerald-600">
             Pages
           </a>
         </nav>
-        <div className="flex items-center gap-6 text-biru">
+
+        {/* Desktop Icons */}
+        <div className="hidden md:flex items-center gap-6 text-biru">
           <a href="#" className="text-biru flex gap-1 font-semibold hover:text-blue-600">
             <span>
               <UserRound size={20} className="cursor-pointer" />
@@ -76,7 +100,53 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
             <span>1</span>
           </div>
         </div>
+
+        {/* Mobile Menu Button */}
+        <button className="md:hidden text-gray-700" onClick={toggleMenu}>
+          {isMenuOpen ? <BiMenuAltRight size={24} /> : <Menu size={24} />}
+        </button>
       </div>
+
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-8 flex flex-col items-center gap-8 h-[calc(100vh-80px)] overflow-y-auto border-t border-gray-100">
+          <nav className="flex flex-col items-center gap-6 text-abu font-semibold text-xl">
+            <a href="#home" onClick={(e) => handleNavClick(e, "#home")} className="hover:text-emerald-600">
+              Home
+            </a>
+            <a href="#product-detail" onClick={(e) => handleNavClick(e, "#product-detail")} className="hover:text-emerald-600 text-gelap">
+              Shop
+            </a>
+            <a href="#reading-list" onClick={(e) => handleNavClick(e, "#reading-list")} className="hover:text-emerald-600">
+              About
+            </a>
+            <a href="#bestseller-section" onClick={(e) => handleNavClick(e, "#bestseller-section")} className="hover:text-emerald-600">
+              Blog
+            </a>
+            <a href="#product-detail" onClick={(e) => handleNavClick(e, "#product-detail")} className="hover:text-emerald-600">
+              Contact
+            </a>
+            <a href="#bestseller-section" onClick={(e) => handleNavClick(e, "#bestseller-section")} className="hover:text-emerald-600">
+              Pages
+            </a>
+          </nav>
+          <div className="flex flex-col items-center gap-6 text-biru text-xl">
+            <a href="#" className="text-biru flex gap-2 font-semibold hover:text-blue-600 items-center">
+              <UserRound size={24} />
+              Login / Register
+            </a>
+            <Search size={24} className="cursor-pointer text-biru" onClick={handleSearchToggle} />
+            <div className="flex items-center gap-1 text-biru">
+              <ShoppingCart size={24} className="cursor-pointer" />
+              <span>1</span>
+            </div>
+            <div className="flex items-center gap-1 text-biru">
+              <Heart size={24} className="cursor-pointer" />
+              <span>1</span>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Search Bar Overlay */}
       {isSearchOpen && (

@@ -35,16 +35,16 @@ const ProductCard: React.FC<ProductCardProps> = ({ book, onBookClick }) => {
   };
 
   return (
-    <div className="group cursor-pointer pb-8 bg-white" onClick={handleClick}>
-      <div className="relative aspect-3/4 overflow-hidden bg-gray-100 mb-4">
-        <Image src={book.cover_image} alt={book.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw" />
+    <div className="group cursor-pointer bg-white shrink-0 w-[238px] md:w-auto pb-8" onClick={handleClick}>
+      <div className="relative aspect-3/4 overflow-hidden bg-gray-100 mb-3 md:mb-4">
+        <Image src={book.cover_image} alt={book.title} fill className="object-cover group-hover:scale-105 transition-transform duration-300" sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw" />
       </div>
-      <div className="text-left px-6">
-        <h3 className="font-bold text-gelap mb-2 line-clamp-1">{book.title}</h3>
-        <p className="text-sm text-abu mb-3">{book.category.name}</p>
-        <div className="flex pl-2 items-center justify-start gap-2">
-          <span className="text-gray-400 line-through text-sm">{formattedOriginalPrice}</span>
-          <span className="text-greenMantap font-bold">{formattedPrice}</span>
+      <div className="text-left px-4">
+        <h3 className="font-bold text-gelap text-sm md:text-base mb-1 md:mb-2 line-clamp-1">{book.title}</h3>
+        <p className="text-xs md:text-sm text-abu mb-2 md:mb-3">{book.category.name}</p>
+        <div className="flex items-center px-2 justify-start gap-1 md:gap-2">
+          <span className="text-gray-400 line-through text-xs md:text-sm">{formattedOriginalPrice}</span>
+          <span className="text-greenMantap font-bold text-sm md:text-base">{formattedPrice}</span>
         </div>
       </div>
     </div>

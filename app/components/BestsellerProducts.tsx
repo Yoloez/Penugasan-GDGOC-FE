@@ -90,10 +90,10 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
   }
 
   return (
-    <section className="py-12 flex justify-center">
-      <div className="w-[1050px]">
-        <h3 className="text-2xl font-bold text-left text-gelap mb-8">Books For You</h3>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-8 border-t-2 border-light-gray">
+    <section className="py-6 md:py-12 flex justify-center" id="bestSeller">
+      <div className="w-full max-w-[1050px] md:px-0">
+        <h3 className="text-xl md:text-2xl font-bold text-left text-gelap mb-4 md:mb-8 px-4 md:px-0">Books For You</h3>
+        <div className="md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:pt-8 md:border-t md:border-gray-200 overflow-x-auto flex md:flex-none gap-4 px-4 md:px-0 pb-4 md:pb-0 scrollbar-hide">
           {books.slice(0, 8).map((book) => (
             <ProductCard key={book._id} book={book} onBookClick={handleBookClick} />
           ))}
@@ -101,16 +101,16 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (
-          <div className="flex justify-center items-center gap-4 mt-8">
+          <div className="flex justify-center items-center gap-2 md:gap-4 mt-6 md:mt-8 px-4 md:px-0">
             <button
               onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
               disabled={!pagination.hasPrevPage}
-              className="px-4 py-2 bg-biru text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="px-3 md:px-4 py-2 text-sm md:text-base bg-biru text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
               Previous
             </button>
 
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 md:gap-2">
               {Array.from({ length: Math.min(5, pagination.totalPages) }, (_, i) => {
                 let pageNumber;
                 if (pagination.totalPages <= 5) {
@@ -127,7 +127,7 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
                   <button
                     key={pageNumber}
                     onClick={() => setCurrentPage(pageNumber)}
-                    className={`px-4 py-2 cursor-pointer rounded-lg transition-colors ${currentPage === pageNumber ? "bg-biru text-white font-bold" : "bg-gray-200 text-gelap hover:bg-gray-300"}`}
+                    className={`px-3 md:px-4 py-2 text-sm md:text-base cursor-pointer rounded-lg transition-colors ${currentPage === pageNumber ? "bg-biru text-white font-bold" : "bg-gray-200 text-gelap hover:bg-gray-300"}`}
                   >
                     {pageNumber}
                   </button>
@@ -138,7 +138,7 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
             <button
               onClick={() => setCurrentPage((prev) => Math.min(pagination.totalPages, prev + 1))}
               disabled={!pagination.hasNextPage}
-              className="px-4 py-2 bg-biru cursor-pointer text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
+              className="px-3 md:px-4 py-2 text-sm md:text-base bg-biru cursor-pointer text-white rounded-lg hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors"
             >
               Next
             </button>
