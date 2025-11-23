@@ -45,7 +45,7 @@ const ProductDetailPage: React.FC = () => {
         const data: ApiResponse = await response.json();
         if (data.books && data.books.length > 0) {
           setAllBooks(data.books);
-          const firstBook = data.books[0];
+          const firstBook = data.books[6];
           const convertedProduct = convertBookToProduct(firstBook);
           setProduct(convertedProduct);
           setCurrentBookIndex(0);

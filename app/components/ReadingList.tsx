@@ -13,7 +13,7 @@ interface ReadingListProps {
   onBookClick?: (book: Book) => void;
 }
 
-const ReadingList: React.FC<ReadingListProps> = ({ sort = "popular", page = 1, year = "", genre = "", keyword = "", onBookClick }) => {
+const ReadingList: React.FC<ReadingListProps> = ({ sort = "popular", page = 2, year = "", genre = "", keyword = "", onBookClick }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
