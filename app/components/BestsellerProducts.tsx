@@ -71,7 +71,7 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
 
   if (loading) {
     return (
-      <section className="py-12 flex justify-center bg-white">
+      <section className="py-12 flex justify-center">
         <div className="w-[1050px]">
           <div className="text-center text-gray-500">Loading products...</div>
         </div>
@@ -81,7 +81,7 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
 
   if (error) {
     return (
-      <section className="py-12 flex justify-center bg-white">
+      <section className="py-12 flex justify-center">
         <div className="w-[1050px]">
           <div className="text-center text-red-500">Error: {error}</div>
         </div>

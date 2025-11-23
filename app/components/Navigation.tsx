@@ -51,7 +51,7 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
   };
 
   return (
-    <div className={`flex justify-center bg-white py-2 z-50 shadow-sm transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0" : "sticky top-0"}`}>
+    <div className={`flex justify-center bg-white py-2 z-50 transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0" : "sticky top-0"}`}>
       <div className="flex text-gray-700 justify-between items-center py-4 w-full max-w-[1042px] px-4 md:px-0">
         <a href="#">
           <div className="text-2xl font-bold">Bookstar</div>
@@ -84,7 +84,7 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
 
         {/* Desktop Icons */}
         <div className="hidden md:flex items-center gap-6 text-biru">
-          <a href="#" className="text-biru flex gap-1 font-semibold hover:text-blue-600">
+          <a href="/login" className="text-biru flex gap-1 font-semibold hover:text-blue-600">
             <span>
               <UserRound size={20} className="cursor-pointer" />
             </span>
@@ -109,7 +109,7 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-8 flex flex-col items-center gap-8 h-[calc(100vh-80px)] overflow-y-auto border-t border-gray-100">
+        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-8 flex flex-col items-center gap-8 h-[calc(100vh-80px)] overflow-y-auto border-gray-100">
           <nav className="flex flex-col items-center gap-6 text-abu font-semibold text-xl">
             <a href="#home" onClick={(e) => handleNavClick(e, "#home")} className="hover:text-emerald-600">
               Home

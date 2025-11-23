@@ -1,17 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Header from "./components/Header";
 import Breadcrumb from "./components/Breadcrumb";
 import ProductGallery from "./components/ProductGallery";
 import ProductInfo from "./components/ProductInfo";
 import ReadingList from "./components/ReadingList";
 import BestsellerProducts from "./components/BestsellerProducts";
-import { Product, Book, convertBookToProduct } from "./components/types";
+import { Product, Book, convertBookToProduct, ApiResponse } from "./components/types";
 
 const ProductDetailPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [searchKeyword, setSearchKeyword] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [allBooks, setAllBooks] = useState<Book[]>([]);
+  const [currentBookIndex, setCurrentBookIndex] = useState(0);
 
   const initialProduct: Product = {
     id: "1",
@@ -29,12 +32,53 @@ const ProductDetailPage: React.FC = () => {
 
   const [product, setProduct] = useState<Product>(initialProduct);
 
-  const nextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
+  useEffect(() => {
+    const fetchInitialProduct = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch("https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?sort=popular&page=1");
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch book");
+        }
+
+        const data: ApiResponse = await response.json();
+        if (data.books && data.books.length > 0) {
+          setAllBooks(data.books);
+          const firstBook = data.books[0];
+          const convertedProduct = convertBookToProduct(firstBook);
+          setProduct(convertedProduct);
+          setCurrentBookIndex(0);
+        }
+      } catch (error) {
+        console.error("Error fetching initial product:", error);
+        // Keep using initialProduct as fallback
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchInitialProduct();
+  }, []);
+
+  const nextBook = () => {
+    if (allBooks.length > 0) {
+      const nextIndex = (currentBookIndex + 1) % allBooks.length;
+      setCurrentBookIndex(nextIndex);
+      const convertedProduct = convertBookToProduct(allBooks[nextIndex]);
+      setProduct(convertedProduct);
+      setCurrentImageIndex(0);
+    }
   };
 
-  const prevImage = () => {
-    setCurrentImageIndex((prev) => (prev - 1 + product.images.length) % product.images.length);
+  const prevBook = () => {
+    if (allBooks.length > 0) {
+      const prevIndex = (currentBookIndex - 1 + allBooks.length) % allBooks.length;
+      setCurrentBookIndex(prevIndex);
+      const convertedProduct = convertBookToProduct(allBooks[prevIndex]);
+      setProduct(convertedProduct);
+      setCurrentImageIndex(0);
+    }
   };
 
   const handleBookSelect = (book: Book) => {
@@ -66,7 +110,7 @@ const ProductDetailPage: React.FC = () => {
           <Breadcrumb />
           <div className="container mx-auto px-4 py-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-              <ProductGallery images={product.images} currentImageIndex={currentImageIndex} onNextImage={nextImage} onPrevImage={prevImage} productTitle={product.title} />
+              <ProductGallery images={product.images} currentImageIndex={currentImageIndex} onNextImage={nextBook} onPrevImage={prevBook} productTitle={product.title} />
               <ProductInfo product={product} />
             </div>
           </div>
