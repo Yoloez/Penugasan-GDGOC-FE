@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Inter, Montserrat } from "next/font/google";
 import "./globals.css";
+import { ShopProvider } from "./context/ShopContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +31,9 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased`}>{children}</body>
+      <body className={`${inter.variable} ${geistSans.variable} ${geistMono.variable} ${montserrat.variable} antialiased`}>
+        <ShopProvider>{children}</ShopProvider>
+      </body>
     </html>
   );
 }

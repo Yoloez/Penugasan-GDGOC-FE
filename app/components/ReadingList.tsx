@@ -2,52 +2,57 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Book, ApiResponse } from "./types";
+import { Book } from "./types";
 
 interface ReadingListProps {
-  sort?: string;
-  page?: number;
-  year?: string;
-  genre?: string;
-  keyword?: string;
   onBookClick?: (book: Book) => void;
 }
 
-const ReadingList: React.FC<ReadingListProps> = ({ sort = "popular", page = 2, year = "", genre = "", keyword = "", onBookClick }) => {
+const ReadingList: React.FC<ReadingListProps> = ({ onBookClick }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchBooks = async () => {
+    // Load recently viewed books from localStorage
+    const loadRecentlyViewed = () => {
       try {
         setLoading(true);
-        const params = new URLSearchParams();
-        if (sort) params.append("sort", sort);
-        if (page) params.append("page", page.toString());
-        if (year) params.append("year", year);
-        if (genre) params.append("genre", genre);
-        if (keyword) params.append("keyword", keyword);
-
-        const response = await fetch(`https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?${params.toString()}`);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch books");
+        const saved = localStorage.getItem("recentlyViewed");
+        if (saved) {
+          const recentBooks: Book[] = JSON.parse(saved);
+          setBooks(recentBooks.slice(0, 4)); // Show max 8 books
         }
-
-        const data: ApiResponse = await response.json();
-        setBooks(data.books);
-        setError(null);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "An error occurred");
+        console.error("Error loading recently viewed books:", err);
         setBooks([]);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchBooks();
-  }, [sort, page, year, genre, keyword]);
+    loadRecentlyViewed();
+
+    // Listen for storage changes (when a book is viewed)
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === "recentlyViewed") {
+        loadRecentlyViewed();
+      }
+    };
+
+    window.addEventListener("storage", handleStorageChange);
+
+    // Custom event for same-tab updates
+    const handleCustomEvent = () => {
+      loadRecentlyViewed();
+    };
+
+    window.addEventListener("recentlyViewedUpdated", handleCustomEvent);
+
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("recentlyViewedUpdated", handleCustomEvent);
+    };
+  }, []);
 
   const handleBookClick = (book: Book) => {
     console.log("Reading list book clicked:", book);
@@ -57,31 +62,19 @@ const ReadingList: React.FC<ReadingListProps> = ({ sort = "popular", page = 2, y
   };
 
   if (loading) {
-    return (
-      <section className="py-12 flex justify-center">
-        <div className="w-[1050px]">
-          <div className="text-center text-gray-500">Loading reading list...</div>
-        </div>
-      </section>
-    );
+    return null; // Don't show anything while loading
   }
 
-  if (error) {
-    return (
-      <section className="py-12 flex justify-center">
-        <div className="w-[1050px]">
-          <div className="text-center text-red-500">Error: {error}</div>
-        </div>
-      </section>
-    );
+  if (books.length === 0) {
+    return null; // Don't show section if no recently viewed books
   }
 
   return (
     <section className="py-6 md:py-12 flex justify-center">
       <div className="w-full max-w-[1050px] md:px-0">
-        <h2 className="text-xl md:text-2xl font-bold text-gelap mb-4 md:mb-8 px-4 md:px-0">Your Reading List</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gelap mb-4 md:mb-8 px-4 md:px-0">Recently Viewed</h2>
         <div className="md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:border-t md:border-gray-200 md:pt-8 overflow-x-auto flex md:flex-none gap-4 px-4 md:px-0 pb-4 md:pb-0 scrollbar-hide">
-          {books.slice(0, 4).map((book) => {
+          {books.map((book) => {
             const priceString = book.details.price.replace(/[^0-9]/g, "");
             const priceIDR = parseInt(priceString);
             const priceUSD = priceIDR / 15000; // Convert IDR to USD (approximate rate)

@@ -4,6 +4,8 @@ import React, { useState } from "react";
 import { ShoppingCart, Heart, Search, UserRound, X, Menu } from "lucide-react";
 import { BiMenuAltRight } from "react-icons/bi";
 import { IoChevronDownOutline } from "react-icons/io5";
+import { useShop } from "../context/ShopContext";
+import Link from "next/link";
 
 interface NavigationProps {
   onSearch?: (keyword: string) => void;
@@ -11,6 +13,7 @@ interface NavigationProps {
 }
 
 const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
+  const { cart, wishlist } = useShop();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -91,14 +94,14 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
             Login / Register
           </a>
           <Search size={20} className="cursor-pointer" onClick={handleSearchToggle} />
-          <div className="flex items-center gap-1">
+          <Link href="/cart" className="flex items-center gap-1">
             <ShoppingCart size={20} className="cursor-pointer" />
-            <span>1</span>
-          </div>
-          <div className="flex items-center gap-1 text-biru">
+            <span>{cart.length}</span>
+          </Link>
+          <Link href="/wishlist" className="flex items-center gap-1 text-biru">
             <Heart size={20} className="cursor-pointer" />
-            <span>1</span>
-          </div>
+            <span>{wishlist.length}</span>
+          </Link>
         </div>
 
         {/* Mobile Menu Button */}
@@ -136,14 +139,14 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
               Login / Register
             </a>
             <Search size={24} className="cursor-pointer text-biru" onClick={handleSearchToggle} />
-            <div className="flex items-center gap-1 text-biru">
+            <Link href="/cart" className="flex items-center gap-1 text-biru">
               <ShoppingCart size={24} className="cursor-pointer" />
-              <span>1</span>
-            </div>
-            <div className="flex items-center gap-1 text-biru">
+              <span>{cart.length}</span>
+            </Link>
+            <Link href="/wishlist" className="flex items-center gap-1 text-biru">
               <Heart size={24} className="cursor-pointer" />
-              <span>1</span>
-            </div>
+              <span>{wishlist.length}</span>
+            </Link>
           </div>
         </div>
       )}

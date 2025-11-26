@@ -1,15 +1,27 @@
+"use client";
+
 import React, { useState } from "react";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
 import { Product } from "./types";
 import { IoEyeSharp } from "react-icons/io5";
+import { useShop } from "../context/ShopContext";
 
 interface ProductInfoProps {
   product: Product;
 }
 
 const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
+  const { addToCart, addToWishlist, isInCart, isInWishlist } = useShop();
   const [isExpanded, setIsExpanded] = useState(false);
   const maxHeight = 150;
+
+  const handleAddToCart = () => {
+    addToCart(product);
+  };
+
+  const handleAddToWishlist = () => {
+    addToWishlist(product);
+  };
 
   return (
     <div className="max-w-[510px]" id="product-info">
@@ -61,12 +73,12 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
       </div>
 
       <div className="flex gap-4 mb-6">
-        <button className="px-3  bg-[#007AFF] hover:bg-blue-700 text-white font-semibold rounded-xl">Buy Now</button>
-        <button className="p-3 bg-primary  rounded-4xl">
-          <Heart size={20} className="text-gelap" />
+        <button className="px-3 bg-[#007AFF] hover:bg-blue-700 text-white font-semibold rounded-xl">Buy Now</button>
+        <button onClick={handleAddToWishlist} className={`p-3 rounded-4xl transition-colors cursor-pointer ${isInWishlist(product.id) ? "bg-red-100" : "bg-primary"}`} title={isInWishlist(product.id) ? "Already in wishlist" : "Add to wishlist"}>
+          <Heart size={20} className={isInWishlist(product.id) ? "text-red-500 fill-red-500" : "text-gelap"} />
         </button>
-        <button className="p-3 bg-primary rounded-4xl">
-          <ShoppingCart size={20} className="text-gelap" />
+        <button onClick={handleAddToCart} className={`p-3 rounded-4xl transition-colors cursor-pointer ${isInCart(product.id) ? "bg-green-100" : "bg-primary"}`} title={isInCart(product.id) ? "Already in cart" : "Add to cart"}>
+          <ShoppingCart size={20} className={isInCart(product.id) ? "text-green-600" : "text-gelap"} />
         </button>
         <button className="p-3 bg-primary rounded-4xl">
           <IoEyeSharp size={20} className="text-gelap" />

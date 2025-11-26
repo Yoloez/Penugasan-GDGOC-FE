@@ -17,14 +17,14 @@ const ProductGallery: React.FC<ProductGalleryProps> = ({ images, currentImageInd
           <img src={images[currentImageIndex]} alt={productTitle} className="max-w-full max-h-full object-contain" />
         </div>
       </div>
-      <button onClick={onPrevImage} className="absolute left-4 top-1/2 -translate-y-1/2 bg-gelap/50 hover:bg-gelap/70 shadow-2xl rounded-full p-2 cursor-pointer transition-colors z-10">
+      <button onClick={onPrevImage} className="absolute left-4 top-1/2 -translate-y-1/2 hover:bg-gelap/70 shadow-2xl rounded-full p-2 cursor-pointer transition-colors z-10">
         <ChevronLeft size={50} color="white" />
       </button>
-      <button onClick={onNextImage} className="absolute right-4 top-1/2 -translate-y-1/2 bg-gelap/50 hover:bg-gelap/70 shadow-2xl rounded-full p-2 cursor-pointer transition-colors z-10">
+      <button onClick={onNextImage} className="absolute right-4 top-1/2 -translate-y-1/2 hover:bg-gelap/70 shadow-2xl rounded-full p-2 cursor-pointer transition-colors z-10">
         <ChevronRight size={50} color="white" />
       </button>
     </div>
   );
 };
 
-export default ProductGallery;
+export default ProductGallery;  

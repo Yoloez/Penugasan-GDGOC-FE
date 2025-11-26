@@ -8,6 +8,7 @@ import ProductInfo from "./components/ProductInfo";
 import ReadingList from "./components/ReadingList";
 import BestsellerProducts from "./components/BestsellerProducts";
 import { Product, Book, convertBookToProduct, ApiResponse } from "./components/types";
+import { addToRecentlyViewed } from "./utils/recentlyViewed";
 
 const ProductDetailPage: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -48,10 +49,11 @@ const ProductDetailPage: React.FC = () => {
           const convertedProduct = convertBookToProduct(firstBook);
           setProduct(convertedProduct);
           setCurrentBookIndex(0);
+          // Add to recently viewed
+          addToRecentlyViewed(firstBook);
         }
       } catch (error) {
         console.error("Error fetching initial product:", error);
-      
       } finally {
         setLoading(false);
       }
@@ -64,9 +66,12 @@ const ProductDetailPage: React.FC = () => {
     if (allBooks.length > 0) {
       const nextIndex = (currentBookIndex + 1) % allBooks.length;
       setCurrentBookIndex(nextIndex);
-      const convertedProduct = convertBookToProduct(allBooks[nextIndex]);
+      const nextBookData = allBooks[nextIndex];
+      const convertedProduct = convertBookToProduct(nextBookData);
       setProduct(convertedProduct);
       setCurrentImageIndex(0);
+      // Add to recently viewed
+      addToRecentlyViewed(nextBookData);
     }
   };
 
@@ -74,9 +79,12 @@ const ProductDetailPage: React.FC = () => {
     if (allBooks.length > 0) {
       const prevIndex = (currentBookIndex - 1 + allBooks.length) % allBooks.length;
       setCurrentBookIndex(prevIndex);
-      const convertedProduct = convertBookToProduct(allBooks[prevIndex]);
+      const prevBookData = allBooks[prevIndex];
+      const convertedProduct = convertBookToProduct(prevBookData);
       setProduct(convertedProduct);
       setCurrentImageIndex(0);
+      // Add to recently viewed
+      addToRecentlyViewed(prevBookData);
     }
   };
 
@@ -86,6 +94,8 @@ const ProductDetailPage: React.FC = () => {
     console.log("Converted product:", convertedProduct);
     setProduct(convertedProduct);
     setCurrentImageIndex(0);
+    // Add to recently viewed
+    addToRecentlyViewed(book);
     // Scroll to product detail section
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -116,12 +126,10 @@ const ProductDetailPage: React.FC = () => {
         </div>
       </section>
 
-      {/* Reading List */}
       <div id="reading-list">
         <ReadingList onBookClick={handleBookSelect} />
       </div>
 
-      {/* Bestseller Products */}
       <div id="bestseller-section">
         <BestsellerProducts onBookSelect={handleBookSelect} keyword={searchKeyword} />
       </div>
