@@ -59,10 +59,6 @@ const CartPage = () => {
                     <span>Subtotal</span>
                     <span>${total.toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between text-abu">
-                    <span>Shipping</span>
-                    <span>Free</span>
-                  </div>
                 </div>
                 <div className="flex justify-between text-lg font-bold text-gelap mb-6">
                   <span>Total</span>

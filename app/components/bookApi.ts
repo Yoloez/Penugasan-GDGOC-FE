@@ -1,4 +1,4 @@
-import { Book, BookDetailResponse } from "./types";
+import { Book, BookDetailResponse } from "../types";
 
 const API_BASE_URL = "http://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1";
 

@@ -1,5 +1,5 @@
 import React from "react";
-import { Book } from "./types";
+import { Book } from "../types";
 import Image from "next/image";
 import { fetchBookById } from "./bookApi";
 
@@ -9,10 +9,9 @@ interface ProductCardProps {
 }
 
 const ProductCard: React.FC<ProductCardProps> = ({ book, onBookClick }) => {
-  // Extract price from details.price string (e.g., "Rp 160,000" -> 160000)
   const priceString = book.details.price.replace(/[^0-9]/g, "");
   const priceIDR = parseInt(priceString);
-  const priceUSD = priceIDR / 15000; // Convert IDR to USD (approximate rate)
+  const priceUSD = priceIDR / 16654;
   const formattedPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -43,8 +42,7 @@ const ProductCard: React.FC<ProductCardProps> = ({ book, onBookClick }) => {
         <h3 className="font-bold text-gelap text-sm md:text-base mb-1 md:mb-2 line-clamp-1">{book.title}</h3>
         <p className="text-xs md:text-sm text-abu mb-2 md:mb-3">{book.category.name}</p>
         <div className="flex items-center px-2 justify-start gap-1 md:gap-2">
-          <span className="text-gray-400 line-through text-xs md:text-sm">{formattedOriginalPrice}</span>
-          <span className="text-greenMantap font-bold text-sm md:text-base">{formattedPrice}</span>
+          <span className="text-greenMantap font-semibold text-[16px] md:text-base">{formattedOriginalPrice}</span>
         </div>
       </div>
     </div>

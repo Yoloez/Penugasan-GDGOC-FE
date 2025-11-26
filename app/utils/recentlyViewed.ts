@@ -1,4 +1,4 @@
-import { Book } from "../components/types";
+import { Book } from "../types";
 
 export const addToRecentlyViewed = (book: Book) => {
   try {

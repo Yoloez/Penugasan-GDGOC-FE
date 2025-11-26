@@ -6,14 +6,15 @@ import Navigation from "./Navigation";
 
 interface HeaderProps {
   onSearch?: (keyword: string) => void;
+  searchKeyword?: string;
 }
 
-const Header: React.FC<HeaderProps> = ({ onSearch }) => {
+const Header: React.FC<HeaderProps> = ({ onSearch, searchKeyword = "" }) => {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
+      setIsScrolled(window.scrollY > 90);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -23,7 +24,12 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
   return (
     <header className="text-white w-full">
       <TopBar isScrolled={isScrolled} />
-      <Navigation onSearch={onSearch} isScrolled={isScrolled} />
+      <Navigation
+        onSearch={onSearch}
+        isScrolled={isScrolled}
+        searchKeyword={searchKeyword}
+        // Pass ke Navigation
+      />
     </header>
   );
 };

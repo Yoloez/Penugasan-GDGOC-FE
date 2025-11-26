@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
-import { Book, ApiResponse } from "./types";
+import { Book, ApiResponse } from "../types";
 
 interface BestsellerProductsProps {
   sort?: string;
@@ -10,10 +10,12 @@ interface BestsellerProductsProps {
   year?: string;
   genre?: string;
   keyword?: string;
+  isSearching?: boolean;
+  onClearSearch?: () => void;
   onBookSelect?: (book: Book) => void;
 }
 
-const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest", page: initialPage = 2, year = "", genre = "", keyword = "", onBookSelect }) => {
+const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest", page: initialPage = 2, year = "", genre = "", keyword = "", isSearching = false, onClearSearch, onBookSelect }) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -34,16 +36,25 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
         params.append("page", currentPage.toString());
         if (year) params.append("year", year);
         if (genre) params.append("genre", genre);
-        if (keyword) params.append("keyword", keyword);
+        // Normalize keyword to lowercase for case-insensitive search
+        if (keyword) params.append("keyword", keyword.toLowerCase());
 
         const response = await fetch(`https://bukuacak-9bdcb4ef2605.herokuapp.com/api/v1/book?${params.toString()}`);
 
         if (!response.ok) {
-          throw new Error("Failed to fetch books");
+          throw new Error("keknya lagi banyak yang akses  ");
         }
 
         const data: ApiResponse = await response.json();
-        setBooks(data.books);
+
+        // Client-side filtering for better case-insensitive matching
+        let filteredBooks = data.books;
+        if (keyword && keyword.trim()) {
+          const searchTerm = keyword.toLowerCase();
+          filteredBooks = data.books.filter((book) => book.title.toLowerCase().includes(searchTerm));
+        }
+
+        setBooks(filteredBooks);
         setPagination({
           totalPages: data.pagination.totalPages,
           totalItems: data.pagination.totalItems,
@@ -92,12 +103,37 @@ const BestsellerProducts: React.FC<BestsellerProductsProps> = ({ sort = "newest"
   return (
     <section className="py-6 md:py-12 flex justify-center" id="bestSeller">
       <div className="w-full max-w-[1050px] md:px-0">
-        <h3 className="text-xl md:text-2xl font-bold text-left text-gelap mb-4 md:mb-8 px-4 md:px-0">Books For You</h3>
-        <div className="md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:pt-8 md:border-t md:border-gray-200 overflow-x-auto flex md:flex-none gap-4 px-4 md:px-0 pb-4 md:pb-0 scrollbar-hide">
-          {books.slice(0, 8).map((book) => (
-            <ProductCard key={book._id} book={book} onBookClick={handleBookClick} />
-          ))}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-4 md:mb-8 px-4 md:px-0 gap-2">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-xl md:text-2xl font-bold text-gelap">{isSearching ? `Search Results for "${keyword}"` : "Books For You"}</h3>
+            {isSearching && books.length > 0 && (
+              <p className="text-sm md:text-base text-abu">
+                Found {books.length} book{books.length !== 1 ? "s" : ""}
+              </p>
+            )}
+          </div>
+          {isSearching && onClearSearch && (
+            <button onClick={onClearSearch} className="text-sm md:text-base px-4 py-2 bg-gray-200 text-gelap rounded-lg hover:bg-gray-300 transition-colors font-semibold self-start md:self-auto">
+              Clear Search
+            </button>
+          )}
         </div>
+        {books.length === 0 ? (
+          <div className="text-center py-12 px-4">
+            <p className="text-lg text-abu mb-4">No books found matching "{keyword}"</p>
+            {onClearSearch && (
+              <button onClick={onClearSearch} className="px-6 py-3 bg-biru text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold">
+                Show All Books
+              </button>
+            )}
+          </div>
+        ) : (
+          <div className="md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:pt-8 md:border-t md:border-gray-200 overflow-x-auto flex md:flex-none gap-4 px-4 md:px-0 pb-4 md:pb-0 scrollbar-hide">
+            {books.slice(0, 8).map((book) => (
+              <ProductCard key={book._id} book={book} onBookClick={handleBookClick} />
+            ))}
+          </div>
+        )}
 
         {/* Pagination */}
         {pagination.totalPages > 1 && (

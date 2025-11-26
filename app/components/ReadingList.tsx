@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Image from "next/image";
-import { Book } from "./types";
+import { Book } from "../types";
 
 interface ReadingListProps {
   onBookClick?: (book: Book) => void;
@@ -72,12 +72,12 @@ const ReadingList: React.FC<ReadingListProps> = ({ onBookClick }) => {
   return (
     <section className="py-6 md:py-12 flex justify-center">
       <div className="w-full max-w-[1050px] md:px-0">
-        <h2 className="text-xl md:text-2xl font-bold text-gelap mb-4 md:mb-8 px-4 md:px-0">Recently Viewed</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-gelap mb-4 md:mb-8 px-4 md:px-0">Your Reading List</h2>
         <div className="md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:border-t md:border-gray-200 md:pt-8 overflow-x-auto flex md:flex-none gap-4 px-4 md:px-0 pb-4 md:pb-0 scrollbar-hide">
           {books.map((book) => {
             const priceString = book.details.price.replace(/[^0-9]/g, "");
             const priceIDR = parseInt(priceString);
-            const priceUSD = priceIDR / 15000; // Convert IDR to USD (approximate rate)
+            const priceUSD = priceIDR / 16654; // Convert IDR to USD (current rate: Rp 16,654 per USD)
             const formattedPrice = new Intl.NumberFormat("en-US", {
               style: "currency",
               currency: "USD",
@@ -99,9 +99,8 @@ const ReadingList: React.FC<ReadingListProps> = ({ onBookClick }) => {
                 <div className="text-left px-3">
                   <h3 className="font-bold text-gelap text-sm md:text-base mb-1 md:mb-2 line-clamp-1">{book.title}</h3>
                   <p className="text-xs md:text-sm text-abu mb-2 md:mb-3">{book.category.name}</p>
-                  <div className="flex items-center justify-start gap-1 md:gap-2 px-1">
-                    <span className="text-gray-400 line-through text-xs md:text-sm">{formattedOriginalPrice}</span>
-                    <span className="text-greenMantap font-bold text-sm md:text-base">{formattedPrice}</span>
+                  <div className="flex items-center justify-start gap-1 md:gap-2 px-2">
+                    <span className="text-greenMantap font-semibold text-[16px] md:text-base">{formattedOriginalPrice}</span>
                   </div>
                 </div>
               </div>

@@ -75,7 +75,7 @@ export interface BookDetailResponse {
 export const convertBookToProduct = (book: Book): Product => {
   const priceString = book.details.price.replace(/[^0-9]/g, "");
   const priceIDR = parseInt(priceString) || 0;
-  const priceUSD = priceIDR / 15000; // Convert IDR to USD (approximate rate)
+  const priceUSD = priceIDR / 16654; 
 
   return {
     id: book._id,

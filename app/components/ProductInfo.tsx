@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Heart, ShoppingCart, Eye } from "lucide-react";
-import { Product } from "./types";
+import { Product } from "../types";
 import { IoEyeSharp } from "react-icons/io5";
 import { useShop } from "../context/ShopContext";
 
@@ -27,7 +27,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
     <div className="max-w-[510px]" id="product-info">
       <div className="flex flex-wrap gap-2 mb-4 max-w-[510px]">
         {product.categories.slice(0, 4).map((cat, index) => (
-          <span key={`${cat}-${index}`} className="px-3 py-1 bg-netral font-medium text-black text-sm rounded-[40px] whitespace-nowrap">
+          <span key={`${cat}-${index}`} className="px-4 py-1 bg-netral font-medium text-black text-sm rounded-[40px] whitespace-nowrap">
             {cat}
           </span>
         ))}
@@ -43,7 +43,7 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
       </div>
 
       <div className="mb-6">
-        <div className={`text-desc font-normal leading-relaxed overflow-hidden transition-all duration-300 ${isExpanded ? "max-h-none" : "max-h-[150px]"}`}>{product.description}</div>
+        <div className={`text-desc font-semibold leading-relaxed overflow-hidden transition-all duration-300 ${isExpanded ? "max-h-none" : "max-h-[150px]"}`}>{product.description}</div>
         {product.description.length > 300 && (
           <button onClick={() => setIsExpanded(!isExpanded)} className="text-biru font-semibold text-sm mt-2 hover:underline cursor-pointer">
             {isExpanded ? "See less" : "See more..."}
@@ -74,7 +74,11 @@ const ProductInfo: React.FC<ProductInfoProps> = ({ product }) => {
 
       <div className="flex gap-4 mb-6">
         <button className="px-3 bg-[#007AFF] hover:bg-blue-700 text-white font-semibold rounded-xl">Buy Now</button>
-        <button onClick={handleAddToWishlist} className={`p-3 rounded-4xl transition-colors cursor-pointer ${isInWishlist(product.id) ? "bg-red-100" : "bg-primary"}`} title={isInWishlist(product.id) ? "Already in wishlist" : "Add to wishlist"}>
+        <button
+          onClick={handleAddToWishlist}
+          className={`p-3 rounded-4xl transition-colors cursor-pointer ${isInWishlist(product.id) ? "bg-red-100" : "bg-primary"}`}
+          title={isInWishlist(product.id) ? "Already in wishlist" : "Add to wishlist"}
+        >
           <Heart size={20} className={isInWishlist(product.id) ? "text-red-500 fill-red-500" : "text-gelap"} />
         </button>
         <button onClick={handleAddToCart} className={`p-3 rounded-4xl transition-colors cursor-pointer ${isInCart(product.id) ? "bg-green-100" : "bg-primary"}`} title={isInCart(product.id) ? "Already in cart" : "Add to cart"}>

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ShoppingCart, Heart, Search, UserRound, X, Menu } from "lucide-react";
 import { BiMenuAltRight } from "react-icons/bi";
 import { IoChevronDownOutline } from "react-icons/io5";
@@ -10,13 +10,34 @@ import Link from "next/link";
 interface NavigationProps {
   onSearch?: (keyword: string) => void;
   isScrolled?: boolean;
+  searchKeyword?: string; // Add this prop to sync with parent
 }
 
-const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
+const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled, searchKeyword = "" }) => {
   const { cart, wishlist } = useShop();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Sync searchQuery with parent's searchKeyword
+  useEffect(() => {
+    if (searchKeyword === "" && searchQuery !== "") {
+      setSearchQuery("");
+    }
+  }, [searchKeyword]);
+
+  // Debounce search
+  useEffect(() => {
+    if (!searchQuery.trim()) return;
+
+    const timeoutId = setTimeout(() => {
+      if (onSearch) {
+        onSearch(searchQuery.trim());
+      }
+    }, 500); // Wait 500ms after user stops typing
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery, onSearch]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,8 +75,8 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
   };
 
   return (
-    <div className={`flex justify-center bg-white py-2 z-50 transition-all duration-300 ${isScrolled ? "fixed top-0 left-0 right-0" : "sticky top-0"}`}>
-      <div className="flex text-gray-700 justify-between items-center py-4 w-full max-w-[1042px] px-4 md:px-0">
+    <div className={`flex justify-center bg-white/95 backdrop-blur-md py-2 z-50 transition-all duration-500 ease-in-out ${isScrolled ? "fixed top-0 left-0 right-0 shadow-lg" : "sticky top-0"}`}>
+      <div className="flex text-gray-700 justify-between items-center py-4 w-full max-w-[1042px] px-4 md:px-0 transition-all duration-300">
         <a href="#">
           <div className="text-2xl font-bold">Bookstar</div>
         </a>
@@ -105,14 +126,14 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
         </div>
 
         {/* Mobile Menu Button */}
-        <button className="md:hidden text-gray-700" onClick={toggleMenu}>
+        <button className="md:hidden text-gray-700 transition-transform duration-300 hover:scale-110" onClick={toggleMenu}>
           {isMenuOpen ? <BiMenuAltRight size={24} /> : <Menu size={24} />}
         </button>
       </div>
 
       {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-8 flex flex-col items-center gap-8 h-[calc(100vh-80px)] overflow-y-auto border-gray-100">
+        <div className="md:hidden absolute top-full left-0 w-full bg-white shadow-lg py-8 flex flex-col items-center gap-8 h-[calc(100vh-80px)] overflow-y-auto border-gray-100 animate-slideDown">
           <nav className="flex flex-col items-center gap-6 text-abu font-semibold text-xl">
             <a href="#home" onClick={(e) => handleNavClick(e, "#home")} className="hover:text-emerald-600">
               Home
@@ -153,18 +174,25 @@ const Navigation: React.FC<NavigationProps> = ({ onSearch, isScrolled }) => {
 
       {/* Search Bar Overlay */}
       {isSearchOpen && (
-        <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg">
+        <div className="absolute top-full left-0 right-0 bg-white border-b border-gray-200 shadow-lg animate-slideDown">
           <div className="flex justify-center py-4 px-4 md:px-0">
             <div className="w-full max-w-[1042px] flex items-center gap-2 md:gap-4">
               <form onSubmit={handleSearchSubmit} className="flex-1 flex gap-2">
-                <input
-                  id="search-input"
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search books..."
-                  className="flex-1 px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg text-gelap focus:outline-none focus:border-biru"
-                />
+                <div className="flex-1 relative">
+                  <input
+                    id="search-input"
+                    type="text"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    placeholder="Search books by title..."
+                    className="w-full px-3 md:px-4 py-2 text-sm md:text-base border border-gray-300 rounded-lg text-gelap focus:outline-none focus:border-biru pr-10"
+                  />
+                  {searchQuery && (
+                    <button type="button" onClick={() => setSearchQuery("")} className="absolute right-2 top-1/2 -translate-y-1/2 p-1 hover:bg-gray-100 rounded-full transition-colors">
+                      <X size={16} className="text-gray-500" />
+                    </button>
+                  )}
+                </div>
                 <button type="submit" className="px-4 md:px-6 py-2 text-sm md:text-base bg-biru text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold whitespace-nowrap">
                   Search
                 </button>
